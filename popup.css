@@ -323,6 +323,10 @@ body {
   place-items: center;
 }
 
+.loading-overlay.hidden {
+  display: none;
+}
+
 .loading-card {
   width: min(280px, calc(100% - 32px));
   border-radius: var(--radius-md);
