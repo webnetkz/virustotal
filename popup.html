@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VirusTotal Checker</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand-dot" aria-hidden="true"></span>
+          <div>
+            <h1>VirusTotal Checker</h1>
+            <p>Fast URL and file scanning</p>
+          </div>
+        </div>
+        <a class="text-link" href="options.html" target="_blank" rel="noreferrer">API settings</a>
+      </header>
+
+      <section class="card" aria-labelledby="site-title">
+        <div class="card-head">
+          <h2 id="site-title">Current Site</h2>
+          <span class="chip">URL</span>
+        </div>
+        <p class="hint">Scan the active tab URL in VirusTotal.</p>
+        <button id="check-site-btn" class="btn btn-primary" type="button">Check Site</button>
+      </section>
+
+      <section class="card" aria-labelledby="file-title">
+        <div class="card-head">
+          <h2 id="file-title">Local File</h2>
+          <span class="chip">File</span>
+        </div>
+        <p class="hint">Select a local file and send it for scanning.</p>
+        <div class="file-picker">
+          <input id="file-input" class="file-input-native" type="file" />
+          <button id="choose-file-btn" class="btn btn-tonal" type="button">Выберите файл</button>
+          <p id="file-name" class="file-name">Файл не выбран</p>
+        </div>
+        <button id="check-file-btn" class="btn btn-primary" type="button">Check File</button>
+      </section>
+
+      <section class="card result-card" aria-labelledby="result-title">
+        <div class="card-head">
+          <h2 id="result-title">Result</h2>
+          <span class="chip chip-muted">Summary</span>
+        </div>
+        <div id="status" class="status info">Waiting for action.</div>
+        <section id="human-result" class="human-result neutral" aria-live="polite">
+          <h3 id="human-title" class="human-title">No scan yet</h3>
+          <p id="human-text" class="human-text">Run a scan to get a simple verdict.</p>
+          <p id="human-stats" class="human-stats">No statistics yet.</p>
+          <a id="human-link" class="human-link hidden" href="#" target="_blank" rel="noreferrer">Open in VirusTotal</a>
+        </section>
+
+        <details class="details-panel">
+          <summary>Technical details (JSON)</summary>
+          <pre id="result" class="result">No details yet.</pre>
+        </details>
+      </section>
+    </main>
+    <div id="loading-overlay" class="loading-overlay hidden" role="status" aria-live="polite">
+      <div class="loading-card">
+        <div class="spinner" aria-hidden="true"></div>
+        <p id="loading-text">Scanning in progress...</p>
+      </div>
+    </div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

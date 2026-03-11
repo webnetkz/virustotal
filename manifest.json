@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "VirusTotal Site & File Checker",
+  "description": "Checks the current site URL and local files with VirusTotal.",
+  "version": "1.0.0",
+  "permissions": [
+    "storage",
+    "tabs",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "https://www.virustotal.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "icons": {
+    "128": "128.png"
+  },
+  "action": {
+    "default_title": "VirusTotal Checker",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "128": "128.png"
+    }
+  },
+  "options_page": "options.html"
+}

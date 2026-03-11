@@ -1,0 +1,169 @@
+:root {
+  color-scheme: light;
+  --bg: #eef3fb;
+  --surface: #ffffff;
+  --text: #1c2533;
+  --muted: #5b6e85;
+  --primary: #0061d8;
+  --primary-hover: #0053b8;
+  --border: #dce4f0;
+  --outline: #9bb3d5;
+  --success-bg: #e6f4ea;
+  --success-text: #187038;
+  --error-bg: #fce8e6;
+  --error-text: #b3261e;
+  --info-bg: #e9f1ff;
+  --info-text: #1b4b8d;
+  --radius-lg: 24px;
+  --radius-md: 14px;
+  --shadow: 0 2px 4px rgba(26, 33, 48, 0.08), 0 14px 28px rgba(26, 33, 48, 0.11);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Noto Sans", "Avenir Next", "Segoe UI", sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 14% -10%, rgba(0, 97, 216, 0.2), transparent 34%),
+    radial-gradient(circle at 100% 0%, rgba(98, 162, 250, 0.16), transparent 28%),
+    var(--bg);
+}
+
+.settings-shell {
+  min-height: 100vh;
+  padding: 24px;
+  display: grid;
+  place-items: center;
+}
+
+.settings-card {
+  width: min(640px, 100%);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  padding: 24px;
+  display: grid;
+  gap: 12px;
+  animation: fade-slide 260ms ease-out;
+}
+
+.settings-head h1 {
+  margin: 0;
+  font-size: clamp(20px, 3vw, 26px);
+}
+
+.settings-head p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+label {
+  margin-top: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+input {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  font-size: 15px;
+  color: var(--text);
+  background: #f9fbff;
+  transition: border-color 130ms ease, box-shadow 130ms ease;
+}
+
+input:focus-visible {
+  outline: 0;
+  border-color: #8eb3ec;
+  box-shadow: 0 0 0 3px rgba(0, 97, 216, 0.14);
+}
+
+.save-btn {
+  justify-self: start;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #1672ea, var(--primary));
+  color: #fff;
+  padding: 11px 18px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+  transition: transform 140ms ease, background-color 140ms ease;
+}
+
+.save-btn:hover {
+  background: linear-gradient(180deg, #0868e0, var(--primary-hover));
+  transform: translateY(-1px);
+}
+
+.save-btn:disabled {
+  opacity: 0.72;
+  cursor: wait;
+  transform: none;
+}
+
+.save-btn:focus-visible {
+  outline: 2px solid var(--outline);
+  outline-offset: 3px;
+}
+
+.status {
+  border-radius: 10px;
+  padding: 9px 11px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.status.info {
+  background: var(--info-bg);
+  color: var(--info-text);
+}
+
+.status.error {
+  background: var(--error-bg);
+  color: var(--error-text);
+}
+
+.status.success {
+  background: var(--success-bg);
+  color: var(--success-text);
+}
+
+@media (max-width: 520px) {
+  .settings-shell {
+    padding: 14px;
+  }
+
+  .settings-card {
+    padding: 16px;
+    border-radius: 18px;
+  }
+
+  .save-btn {
+    width: 100%;
+    justify-self: stretch;
+  }
+}
+
+@keyframes fade-slide {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

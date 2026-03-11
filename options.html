@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VirusTotal Checker Settings</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <main class="settings-shell">
+      <section class="settings-card">
+        <header class="settings-head">
+          <h1>VirusTotal API Settings</h1>
+          <p>Store your API key securely in <code>chrome.storage.sync</code>.</p>
+        </header>
+
+        <label for="api-key">API Key</label>
+        <input id="api-key" type="password" placeholder="Example: 0123456789abcdef..." />
+
+        <button id="save-btn" class="save-btn" type="button">Save Key</button>
+        <div id="status" class="status info">No changes yet.</div>
+      </section>
+    </main>
+
+    <script src="options.js"></script>
+  </body>
+</html>
