@@ -14,6 +14,7 @@ const loadingOverlayEl = document.getElementById("loading-overlay");
 const loadingTextEl = document.getElementById("loading-text");
 const SITE_SCAN_TIMEOUT_MS = 90_000;
 const FILE_SCAN_TIMEOUT_MS = 180_000;
+const ENABLE_DEBUG_LOGS = false;
 
 checkSiteBtn.addEventListener("click", onCheckSite);
 checkFileBtn.addEventListener("click", onCheckFile);
@@ -31,7 +32,7 @@ async function init() {
       renderErrorDetails("API key is missing.");
     }
   } catch (error) {
-    console.error(error);
+    logError(error);
     setStatus("Failed to read settings.", "error");
     renderErrorSummary("Could not load extension settings.");
     renderErrorDetails("Could not load extension settings.");
@@ -63,7 +64,7 @@ async function onCheckSite() {
     renderResult(response.result);
     setStatus("Site check completed.", "success");
   } catch (error) {
-    console.error(error);
+    logError(error);
     const message = error.message || "Error while checking the site.";
     setStatus(message, "error");
     renderErrorSummary(message);
@@ -96,7 +97,7 @@ async function onCheckFile() {
     renderResult(response.result);
     setStatus("File check completed.", "success");
   } catch (error) {
-    console.error(error);
+    logError(error);
     const message = error.message || "Error while checking the file.";
     setStatus(message, "error");
     renderErrorSummary(message);
@@ -160,6 +161,12 @@ function setLoadingText(text) {
   }
 
   loadingTextEl.textContent = text || "Scanning in progress...";
+}
+
+function logError(error) {
+  if (ENABLE_DEBUG_LOGS) {
+    console.error(error);
+  }
 }
 
 function setStatus(message, kind = "info") {

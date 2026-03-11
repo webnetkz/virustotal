@@ -2,17 +2,41 @@ const VT_API_BASE = "https://www.virustotal.com/api/v3";
 const VT_FILE_INLINE_UPLOAD_MAX = 32 * 1024 * 1024;
 const POLL_INTERVAL_MS = 3000;
 const POLL_MAX_ATTEMPTS = 20;
+const ENABLE_DEBUG_LOGS = false;
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   handleMessage(message)
-    .then((result) => sendResponse({ ok: true, result }))
+    .then((result) => safeSendResponse(sendResponse, { ok: true, result }))
     .catch((error) => {
-      console.error("VirusTotal extension error:", error);
-      sendResponse({ ok: false, error: error.message || "Unknown error" });
+      logError("VirusTotal extension error:", error);
+      safeSendResponse(sendResponse, { ok: false, error: toPublicErrorMessage(error) });
     });
 
   return true;
 });
+
+function safeSendResponse(sendResponse, payload) {
+  try {
+    sendResponse(payload);
+  } catch (_error) {
+    // Popup can be closed before async response arrives.
+  }
+}
+
+function logError(...args) {
+  if (ENABLE_DEBUG_LOGS) {
+    console.error(...args);
+  }
+}
+
+function toPublicErrorMessage(error) {
+  const message = String(error?.message || "Unknown error");
+  if (message === "Failed to fetch" || message.includes("NetworkError")) {
+    return "Network request failed. Check internet connection and try again.";
+  }
+
+  return message;
+}
 
 async function handleMessage(message) {
   if (!message || !message.type) {
@@ -42,13 +66,18 @@ async function getApiKey() {
 }
 
 async function vtFetch(path, apiKey, options = {}) {
-  const response = await fetch(`${VT_API_BASE}${path}`, {
-    ...options,
-    headers: {
-      "x-apikey": apiKey,
-      ...(options.headers || {})
-    }
-  });
+  let response;
+  try {
+    response = await fetch(`${VT_API_BASE}${path}`, {
+      ...options,
+      headers: {
+        "x-apikey": apiKey,
+        ...(options.headers || {})
+      }
+    });
+  } catch (_error) {
+    throw new Error("Network request failed. Check internet connection and try again.");
+  }
 
   let payload = null;
   try {
@@ -175,13 +204,18 @@ async function uploadFileAndGetAnalysisId(file, apiKey) {
     throw new Error("VirusTotal did not provide an upload URL for a large file.");
   }
 
-  const response = await fetch(uploadUrl, {
-    method: "POST",
-    headers: {
-      "x-apikey": apiKey
-    },
-    body: form
-  });
+  let response;
+  try {
+    response = await fetch(uploadUrl, {
+      method: "POST",
+      headers: {
+        "x-apikey": apiKey
+      },
+      body: form
+    });
+  } catch (_error) {
+    throw new Error("Network request failed. Check internet connection and try again.");
+  }
 
   let payload = null;
   try {
