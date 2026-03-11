@@ -12,6 +12,8 @@ const humanLinkEl = document.getElementById("human-link");
 const resultEl = document.getElementById("result");
 const loadingOverlayEl = document.getElementById("loading-overlay");
 const loadingTextEl = document.getElementById("loading-text");
+const SITE_SCAN_TIMEOUT_MS = 90_000;
+const FILE_SCAN_TIMEOUT_MS = 180_000;
 
 checkSiteBtn.addEventListener("click", onCheckSite);
 checkFileBtn.addEventListener("click", onCheckFile);
@@ -48,7 +50,11 @@ async function onCheckSite() {
     }
 
     setStatus("Checking site in VirusTotal...", "info");
-    const response = await sendMessage({ type: "checkUrl", url: tab.url });
+    const response = await withTimeout(
+      sendMessage({ type: "checkUrl", url: tab.url }),
+      SITE_SCAN_TIMEOUT_MS,
+      "Site check timed out. Please try again."
+    );
 
     if (!response.ok) {
       throw new Error(response.error || "Unknown error");
@@ -77,7 +83,11 @@ async function onCheckFile() {
     }
 
     setStatus("Uploading file and requesting VirusTotal analysis...", "info");
-    const response = await sendMessage({ type: "checkFile", file });
+    const response = await withTimeout(
+      sendMessage({ type: "checkFile", file }),
+      FILE_SCAN_TIMEOUT_MS,
+      "File check timed out. Please try again."
+    );
 
     if (!response.ok) {
       throw new Error(response.error || "Unknown error");
@@ -98,6 +108,22 @@ async function onCheckFile() {
 
 function sendMessage(message) {
   return chrome.runtime.sendMessage(message);
+}
+
+function withTimeout(promise, timeoutMs, timeoutMessage) {
+  let timeoutId = null;
+
+  const timeoutPromise = new Promise((_, reject) => {
+    timeoutId = setTimeout(() => {
+      reject(new Error(timeoutMessage));
+    }, timeoutMs);
+  });
+
+  return Promise.race([promise, timeoutPromise]).finally(() => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+  });
 }
 
 function lockUI(locked, loadingText) {
